@@ -85,7 +85,6 @@ document.getElementById('compareForm').addEventListener('submit', function (even
     document.getElementById('resultCompare').innerText = result;
 });
 
-// Función para separar múltiples contratos
 document.getElementById('contractForm').addEventListener('submit', function (event) {
     event.preventDefault();
     
@@ -97,10 +96,21 @@ document.getElementById('contractForm').addEventListener('submit', function (eve
     tbody.innerHTML = '';
     
     contractsArray.forEach(contract => {
-        let empresa = contract.slice(0, 3).replace(/^0+|0+$/g, ''); // Primeros 3 dígitos sin ceros al inicio o final
-        const sucursal = contract.slice(3, 5).replace(/^0+/, '');   // Siguientes 2 dígitos sin ceros iniciales
-        const anio = contract.slice(5, 9);                           // Siguientes 4 dígitos (año completo)
-        const secuencial = contract.slice(9);                        // Últimos 5 dígitos (secuencial completo)
+        let empresa, sucursal, anio, secuencial;
+        
+        if (contract.startsWith('011') && contract.length === 15) {
+            // Si el contrato comienza con "011" y tiene 15 dígitos, se trata de un contrato de la empresa 11
+            empresa = '11';
+            sucursal = contract.slice(3, 6).replace(/^0+/, ''); // Siguientes 3 dígitos sin ceros iniciales
+            anio = contract.slice(6, 10);                        // Siguientes 4 dígitos (año completo)
+            secuencial = contract.slice(10);                     // Últimos 5 dígitos (secuencial completo)
+        } else {
+            // Contratos estándar
+            empresa = contract.slice(0, 3).replace(/^0+|0+$/g, ''); // Primeros 3 dígitos sin ceros al inicio o final
+            sucursal = contract.slice(3, 5).replace(/^0+/, '');     // Siguientes 2 dígitos sin ceros iniciales
+            anio = contract.slice(5, 9);                            // Siguientes 4 dígitos (año completo)
+            secuencial = contract.slice(9);                         // Últimos 5 dígitos (secuencial completo)
+        }
         
         // Crear una nueva fila para cada contrato
         const row = document.createElement('tr');
