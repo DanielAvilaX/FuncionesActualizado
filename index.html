@@ -51,6 +51,37 @@
         </div>
     </div>
 
+    <div class="container text-center mt-5">
+        <!-- Nuevo botón para Quitar Repetidos -->
+        <button class="btn btn-success" data-toggle="modal" data-target="#removeDuplicatesModal">Quitar Repetidos</button>
+    </div>
+    
+    <!-- Modal para quitar repetidos -->
+    <div class="modal fade" id="removeDuplicatesModal" tabindex="-1" role="dialog" aria-labelledby="removeDuplicatesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeDuplicatesModalLabel">Quitar Repetidos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="removeDuplicatesForm">
+                        <div class="form-group">
+                            <label for="duplicatesInput">Lista de datos (separados por espacios o comas):</label>
+                            <input type="text" class="form-control" id="duplicatesInput" placeholder="1, 2, 3, 3, 4">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Procesar</button>
+                    </form>
+                    <div id="resultDuplicates" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
     <!-- Modal para contar números -->
     <div class="modal fade" id="countNumbersModal" tabindex="-1" role="dialog" aria-labelledby="countNumbersModalLabel"
         aria-hidden="true">

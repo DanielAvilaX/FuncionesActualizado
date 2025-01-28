@@ -4,14 +4,21 @@ document.getElementById('numbersForm').addEventListener('submit', function (even
     const numbersInput = document.getElementById('numbersInput').value;
     const quotes = document.getElementById('quotes').value;
     
-    let numbersArray = numbersInput.split(' ').map(num => num.trim());
+    // Dividir por cualquier cantidad de espacios o saltos de línea y eliminar entradas vacías
+    let numbersArray = numbersInput
+        .split(/\s+/) // Dividir por espacios, tabulaciones o saltos de línea
+        .filter(num => num.trim().length > 0); // Eliminar entradas vacías
+    
+    // Si se selecciona "sí", envolver los números entre comillas simples
     if (quotes === 'yes') {
         numbersArray = numbersArray.map(num => `'${num}'`);
     }
     
+    // Unir los números separados por comas
     const result = numbersArray.join(', ');
     document.getElementById('resultNumbers').innerText = `Números: ${result}`;
 });
+
 
 document.getElementById('countForm').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -84,6 +91,81 @@ document.getElementById('compareForm').addEventListener('submit', function (even
     const result = `${lengthComparison}\nFaltan en Lista 1: ${missingInList1.join(', ') || 'Ninguno'}\nFaltan en Lista 2: ${missingInList2.join(', ') || 'Ninguno'}\nTotal de diferencias: ${differencesCount}`;
     document.getElementById('resultCompare').innerText = result;
 });
+
+document.getElementById('removeDuplicatesForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const duplicatesInput = document.getElementById('duplicatesInput').value;
+    const dataArray = duplicatesInput.split(/[\s,]+/).filter(Boolean);
+
+    const uniqueItems = [];
+    const duplicateCounts = {};
+
+    // Procesar la lista para identificar elementos únicos y contar repeticiones
+    dataArray.forEach(item => {
+        if (uniqueItems.includes(item)) {
+            duplicateCounts[item] = (duplicateCounts[item] || 1) + 1;
+        } else {
+            uniqueItems.push(item);
+        }
+    });
+
+    // Crear mensaje de resultados
+    const duplicatesList = Object.entries(duplicateCounts)
+        .map(([item, count]) => `${item} (${count} veces)`)
+        .join(', ');
+    const resultMessage = `
+        <p><strong>Lista sin repetidos:</strong> ${uniqueItems.join(', ')}</p>
+        <p><strong>Datos repetidos:</strong> ${duplicatesList || 'Ninguno'}</p>
+    `;
+
+    // Mostrar los resultados
+    document.getElementById('resultDuplicates').innerHTML = resultMessage;
+
+    // Mostrar el botón para copiar
+    const copyButton = document.getElementById('copyDuplicates');
+    copyButton.style.display = 'block';
+
+    // Agregar funcionalidad al botón para copiar el resultado
+    copyButton.addEventListener('click', function () {
+        const copyText = `Lista sin repetidos: ${uniqueItems.join(', ')}\nDatos repetidos: ${duplicatesList || 'Ninguno'}`;
+        copyToClipboard(copyText);
+        alert('Resultado copiado al portapapeles.');
+    });
+});
+document.getElementById('numbersForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const numbersInput = document.getElementById('numbersInput').value;
+    const quotes = document.getElementById('quotes').value;
+    let numbersArray = numbersInput.split(/\s+/).filter(Boolean);
+
+    if (quotes === 'yes') {
+        numbersArray = numbersArray.map(num => `'${num}'`);
+    }
+
+    const result = numbersArray.join(', ');
+    document.getElementById('resultNumbers').innerText = `Números: ${result}`;
+
+    // Mostrar el botón para copiar
+    const copyButton = document.getElementById('copyNumbers');
+    copyButton.style.display = 'block';
+
+    // Agregar funcionalidad al botón para copiar el resultado
+    copyButton.addEventListener('click', function () {
+        copyToClipboard(result);
+        alert('Resultado copiado al portapapeles.');
+    });
+});
+function copyToClipboard(text) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+}
+
 
 document.getElementById('contractForm').addEventListener('submit', function (event) {
     event.preventDefault();
